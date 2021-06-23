@@ -59,7 +59,7 @@ var Read=()=>{
 //5.Update
 var update=()=>{
   Task.updateMany({Completed:false},{Completed:true}).then((res)=>{
-    console.log(res,'Updated Succesfuly')
+    console.log('Updated Succesfuly')
     //deleting a task after updating
     Delete(newTask.id)
   })
@@ -69,6 +69,6 @@ var update=()=>{
 //6.Delete
 var Delete=(id)=>{
   Task.findOneAndDelete({_id:id}).then(res=>{
-    console.log('Record deleted Successfully')
+    console.log(`${res.Description} deleted successfully`)
   })
 }
