@@ -1,6 +1,7 @@
 const mongoose= require('mongoose')
 
 
+//1.
 mongoose.connect('mongodb://localhost/test',{
   useUnifiedTopology:true,
   useNewUrlParser:true,
@@ -8,63 +9,66 @@ mongoose.connect('mongodb://localhost/test',{
 })
 
 mongoose.connection.on('open',()=>{
-  console.log('connnected to mongoose fireworks...');
+  console.log('connnected to mongodb');
 }).on('error',(err)=>{
   console.log(err)
 })
 
+//2.
 const Task= require('./models/task')
 //Dropping collections to empty previous data
-mongoose.connection.collections.tasks.drop().then(()=>{})
+mongoose.connection.collections.tasks.drop()
 
+//3.Create
+var newTask;
+var create=(desc,status)=>{
+   newTask= new Task({
+    Description:desc,
+    Completed:status
+  }).save().then(res=>{
+    console.log(`${res.Description} added succesfully`)
+  })
+}
 
-//Create
-//Task1
-var newTask= new Task({
-  Description:"NOde",
+//Adding 4 tasks
+create('Node',false)
+create('Mongo',false)
+create('js',true)
+newTask=new Task({
+  Description:'Css',
   Completed:true
 })
-newTask.save()
-
-
-//Task2
-newTask= new Task({
-  Description:"Mongo",
-  Completed:false
-})
-newTask.save()
-
-//Task3
- newTask= new Task({
-  Description:"Js",
-  Completed:true
-})
-newTask.save()
-
-//Task4
-newTask= new Task({
-  Description:"Express",
-  Completed:false
-})
-newTask.save()
-
-//Read
-Task.find({Completed:false}).then(res=>{
-  res.forEach(record => {
-    console.log(record)
-  });
-  console.log('Read Successfully')
+newTask.save().then((res)=>{
+  console.log(`${res.Description} added succesfully`)
+  //Reading tasks after creating 4documents
+  Read()
 })
 
+//4.Read
+var Read=()=>{
+  Task.find({Completed:false}).then(res=>{
+    res.forEach(record => {
+      console.log(record)
+    });
+    console.log('Read Successfully')
+    //Updating tasks after reading 
+    update()
+  })
+}
 
-//Update
-Task.updateMany({Completed:false},{Completed:true}).then((res)=>{
-  console.log(res,'Updated Succesfuly')
-})
+//5.Update
+var update=()=>{
+  Task.updateMany({Completed:false},{Completed:true}).then((res)=>{
+    console.log(res,'Updated Succesfuly')
+    //deleting a task after upadating
+    Delete(newTask.id)
+  })
+}
 
 
-var id;
-//Delete
-Task.findOneAndDelete({_id:id}).then(res=>{
-  console.log('Record deleted Successfully')
-})
+//6.Delete
+var Delete=(id)=>{
+  Task.findOneAndDelete({_id:id}).then(res=>{
+    console.log('Record deleted Successfully')
+  })
+}
