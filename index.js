@@ -60,7 +60,7 @@ var Read=()=>{
 var update=()=>{
   Task.updateMany({Completed:false},{Completed:true}).then((res)=>{
     console.log(res,'Updated Succesfuly')
-    //deleting a task after upadating
+    //deleting a task after updating
     Delete(newTask.id)
   })
 }
